@@ -93,11 +93,9 @@ bot.on('message', msg => {
       embed.addField('Emoji Name', msg.content)
 
       msg.channel.send(embed)
-        .then(async newMsg => {
-          await newMsg.react('⬇️')
-          await newMsg.react('⬆️')
-
-          setTimeout(() => msg.delete(), 500)
+        .then(async msg => {
+          await msg.react('⬆️')
+          await msg.react('⬇️')
         })
     }
   } else {

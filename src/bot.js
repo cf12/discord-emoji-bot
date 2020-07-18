@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const Discord = require('discord.js')
 const emoji = require('node-emoji')
+const slugify = require('slugify')
 
 const bot = new Discord.Client()
 bot.login(process.env.TOKEN)
@@ -80,17 +81,30 @@ bot.on('message', msg => {
         return
       }
 
+      const name = slugify(msg.cleanContent, {
+        replacement: '_',
+        remove: /[^A-Za-z0-9 ]/g,
+        lower: true,
+        strict: true,
+      })
+
+      if (name.length > 32) {
+        msg.delete()
+        msg.channel.send('Emoji name too long! Must be under `32` characters.')
+        return
+      }
+
       const embed = new Discord.MessageEmbed()
       embed.setColor('#9c3df4')
       embed.setTitle(`${emoji.random().emoji}  **Emoji Request**`)
       embed.setDescription(`
-        Upvote / downvote the emoji based on what you think.
+        Upvote the emoji if you like it.
         Emojis that get **${numTarget} upvotes** (${numTarget + 1} on the counter) will be added to the server permanently.
       `)
       embed.setThumbnail(img.url)
       embed.setFooter(author.username, author.avatarURL())
 
-      embed.addField('Emoji Name', msg.content)
+      embed.addField('Emoji Name', name)
 
       msg.channel.send(embed)
         .then(async msg => {

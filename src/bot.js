@@ -109,7 +109,6 @@ bot.on('message', msg => {
       msg.channel.send(embed)
         .then(async msg => {
           await msg.react('⬆️')
-          await msg.react('⬇️')
         })
     }
   } else {
